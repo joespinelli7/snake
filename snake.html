@@ -48,17 +48,45 @@
     // Start the game
     main();
 
+    setTimeout(() => {
+        // Call clearCanvas to remove previous positions of snake that would leave a trail behind
+        clearCanvas();
+        advanceSnake();
+        advanceSnake();
+        advanceSnake();
+        advanceSnake();
+        advanceSnake();
+        // Always have to call drawSnake after advanceSnake to show snake moving
+        drawSnake();
+      }, 200)
+
     // Main function of the game, called repeatedly to advance the game
     function main() {
-      advanceSnake()
+      clearCanvas();
+      advanceSnake();
+      advanceSnake();
+      advanceSnake();
+      advanceSnake();
+      advanceSnake();
       drawSnake();
+    }
+
+    function clearCanvas() {
+      //  Select the colour to fill the drawing
+      ctx.fillStyle = "white";
+      //  Select the colour for the border of the canvas
+      ctx.strokeStyle = "black";
+      // Draw a "filled" rectangle to cover the entire canvas
+      ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      // Draw a "border" around the entire canvas
+      ctx.strokeRect(0, 0, gameCanvas.width, gameCanvas.height);
     }
 
     // Advances the snake by changing the x-coordinates of its parts according to the horizontal velocity and
     // the y-coordinates of its parts according to the vertical velocity
     function advanceSnake() {
-      // Create new head
-      const head = {x: snake[0].x + 0, y: snake[0].y + -10};
+      // Create new head, -y makes snake go up vertically
+      const head = {x: snake[0].x + 10, y: snake[0].y + 0};
       // Add new head to beginning of the snake
       snake.unshift(head);
       // Remove the last segment of the snake
