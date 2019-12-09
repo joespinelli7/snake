@@ -48,27 +48,18 @@
     // Start the game
     main();
 
-    setTimeout(() => {
-        // Call clearCanvas to remove previous positions of snake that would leave a trail behind
-        clearCanvas();
-        advanceSnake();
-        advanceSnake();
-        advanceSnake();
-        advanceSnake();
-        advanceSnake();
-        // Always have to call drawSnake after advanceSnake to show snake moving
-        drawSnake();
-      }, 200)
-
     // Main function of the game, called repeatedly to advance the game
     function main() {
-      clearCanvas();
-      advanceSnake();
-      advanceSnake();
-      advanceSnake();
-      advanceSnake();
-      advanceSnake();
-      drawSnake();
+      setTimeout(() => {
+          // Call clearCanvas to remove previous positions of snake that would leave a trail behind
+          clearCanvas();
+          advanceSnake();
+          advanceSnake();
+          advanceSnake();
+          advanceSnake();
+          // Always have to call drawSnake after advanceSnake to show snake moving
+          drawSnake();
+        }, 100)
     }
 
     function clearCanvas() {
