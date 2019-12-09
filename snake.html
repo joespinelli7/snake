@@ -7,7 +7,7 @@
   <body>
     <div id="score">0</div>
 
-    <canvas id="gameCanvas" width="400" height="350"></canvas>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
 
       <style>
         #gameCanvas {
@@ -48,35 +48,31 @@
     // Return a two dimensional drawing context
     const ctx = gameCanvas.getContext("2d");
 
-    function drawSnakePart(snake) {
-      ctx.fillStyle = 'lightgreen';
-      ctx.strokestyle = 'darkgreen';
-      ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-      ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+    // Start the game
+    main();
+
+    // Main function of the game, called repeatedly to advance the game
+    function main() {
+      drawSnake();
     }
+
     // Draws a part of the snake on the canvas
     // @param { object } snakePart - The coordinates where the part should be drawn
-    // function drawSnakePart(snakePart) {
-    //   // Set the colour of the snake part
-    //   ctx.fillStyle = SNAKE_COLOUR;
-    //   // Set the border colour of the snake part
-    //   ctx.strokestyle = SNAKE_BORDER_COLOUR;
-    //   // Draw a "filled" rectangle to represent the snake part at the coordinates
-    //   // the part is located
-    //   ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-    //   // Draw a border around the snake part
-    //   ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
-    // }
-
-    function drawSnake() {
-      snake.forEach(drawSnakePart);
+    function drawSnakePart(snakePart) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
+      ctx.fillStyle = 'lightgreen';
+      ctx.strokestyle = 'darkgreen';
+      // (x coordinate, y coordinate, width, height)
+      // Fills rectangle
+      ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+      // Draws actual rectangle
+      ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
     }
 
     // Draws the snake on the canvas
-    // function drawSnake() {
-    //   // loop through the snake parts drawing each part on the canvas
-    //   snake.forEach(drawSnakePart)
-    // }
+    function drawSnake() {
+      snake.forEach(part => drawSnakePart(part));
+    }
 
   </script>
 </html>
