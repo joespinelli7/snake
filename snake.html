@@ -22,15 +22,12 @@
         #score {
           text-align: center;
           font-size: 140px;
-          font-family: 'Antic Slab', serif;
+          font-family: "Antic Slab", serif;
         }
       </style>
   </body>
 
   <script>
-    const snakeColor = 'lightgreen';
-    const snakeBorderColor = 'darkgreen';
-
     // Each object represents a segment of the snake
     let snake = [
       {x: 200, y: 200},
@@ -44,6 +41,10 @@
     let dx = 10;
     // Vertical velocity
     let dy = 0;
+    // Food x-coordinate
+    let foodX;
+    // Food y-coordinate
+    let foodY;
 
     // Get the canvas element
     const gameCanvas = document.getElementById("gameCanvas");
@@ -52,6 +53,8 @@
 
     // Start the game
     main();
+    // Create the first food location
+    createFood();
     // Calling changeDirection whenever a key is pressed
     document.addEventListener("keydown", changeDirection)
 
@@ -60,6 +63,7 @@
       setTimeout(() => {
           // Call clearCanvas to remove previous positions of snake that would leave a trail behind
           clearCanvas();
+          drawFood();
           advanceSnake();
           // Always have to call drawSnake after advanceSnake to show snake moving
           drawSnake();
@@ -90,17 +94,35 @@
       // This correctly shifts all parts of the snake into place
     }
 
-    // Draws a part of the snake on the canvas
-    // @param { object } snakePart - The coordinates where the part should be drawn
-    function drawSnakePart(snakePart) {
-      // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
-      ctx.fillStyle = snakeColor;
-      ctx.strokestyle = snakeBorderColor;
-      // (x coordinate, y coordinate, width, height)
-      // Fills rectangle
-      ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-      // Draws actual rectangle
-      ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+    // Generates a random number that is a multiple of 10 given a minumum and a maximum number
+    // (param) min: The minimum number the random number can be
+    // (param) max:  The maximum number the random number can be
+    function randomNumber(min, max) {
+      return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+    }
+
+    // Draw the food on the canvas
+    function drawFood() {
+      ctx.fillStyle = "red";
+      ctx.strokeStyle = "darkred";
+      ctx.fillRect(foodX, foodY, 10, 10);
+      ctx.strokeRect(foodX, foodY, 10, 10)
+    }
+
+    function createFood() {
+      // Generate a random number for the x and y coordinates of the food
+      foodX = randomNumber(0, gameCanvas.width - 10);
+      foodY = randomNumber(0, gameCanvas.height - 10);
+
+      // If the new food location is where the snake currently is, generate a new food location
+      snake.forEach(snakePart => {
+        console.log(snakePart)
+        const foodIsOnSnake = snakePart.x == foodX && snakePart.y == foodY;
+        // Check if food generated is on the snake and if true create a new food location
+        if (foodIsOnSnake) {
+          createFood();
+        }
+      })
     }
 
     // Draws the snake on the canvas
@@ -108,10 +130,23 @@
       snake.forEach(snakePart => drawSnakePart(snakePart));
     }
 
+    // Draws a part of the snake on the canvas
+    // @param { object } snakePart - The coordinates where the part should be drawn
+    function drawSnakePart(snakePart) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
+      ctx.fillStyle = "lightgreen";
+      ctx.strokeStyle = "black";
+      // (x coordinate, y coordinate, width, height)
+      // Fills rectangle
+      ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+      // Draws actual rectangle
+      ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+    }
+
     // Changes the vertical and horizontal velocity of the snake according to the key that was pressed.
     // The direction cannot be switched to the opposite direction, to prevent the snake from reversing.
     // For example if the the direction is 'right' it cannot become 'left'.
-    // param event: The keydown event
+    // (param) event: The keydown event
     function changeDirection(event) {
       const leftKey = 37;
       const rightKey = 39;
