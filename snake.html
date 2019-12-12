@@ -15,7 +15,6 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          border: solid 1px black;
           margin-top: 50px;
         }
 
@@ -47,6 +46,9 @@
     let foodX;
     // Food y-coordinate
     let foodY;
+    // When set to true the snake is changing direction, this is to ensure no reversing of snake happens
+    // within 100ms. (detailed description near bottom of code in caps)
+    let changingDirection = false;
 
     // Get the canvas element
     const gameCanvas = document.getElementById("gameCanvas");
@@ -67,13 +69,14 @@
         return;
       }
       setTimeout(() => {
-          // Call clearCanvas to remove previous positions of snake that would leave a trail behind
-          clearCanvas();
-          drawFood();
-          advanceSnake();
-          // Always have to call drawSnake after advanceSnake to show snake moving
-          drawSnake();
-          main();
+        changingDirection = false;
+        // Call clearCanvas to remove previous positions of snake that would leave a trail behind
+        clearCanvas();
+        drawFood();
+        advanceSnake();
+        // Always have to call drawSnake after advanceSnake to show snake moving
+        drawSnake();
+        main();
         }, 100)
     }
 
@@ -155,7 +158,6 @@
         const foodIsOnSnake = snakePart.x == foodX && snakePart.y == foodY;
         // Check if food generated is on the snake and if true create a new food location
         if (foodIsOnSnake) {
-          console.log('here')
           createFood();
         }
       })
@@ -180,14 +182,14 @@
       ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
     }
 
-    // changeDirection error: when user is going to the left then presses down key then quickly right key
+    // CHANGEDIRECTION ERROR: when user is going to the left then presses down key then quickly right key
     // (less than 100ms after pressing down key), snake reverses and errors out b/c snake runs into itself.
     // That is because when the player pressed the down arrow, dx was set to 0.
     // Thus keyPressed === RIGHT_KEY && !goingLeft evaluated to true, and dx changed to 10. It is important
     // to note that the change in direction occurred before 100ms had lapsed. If 100ms lapsed, then the
     // snake would have first taken a step down and would not have reversed.
     // When pressing down, dx = 0 however, if user presses right key before 100ms has passed, main()
-    // function hasn't been called yet and therefore results in snake reversing into itself.  
+    // function hasn't been called yet and therefore results in snake reversing into itself.
 
     // Changes the vertical and horizontal velocity of the snake according to the key that was pressed.
     // The direction cannot be switched to the opposite direction, to prevent the snake from reversing.
@@ -198,6 +200,14 @@
       const rightKey = 39;
       const upKey = 38;
       const downKey = 40;
+
+      // Here, we check if changingDirection is already true and if so we do not change the snakes direction yet
+      // to avoid reversing into itself and ending the game
+      if (changingDirection) {
+        return;
+      }
+      // If snake is not changing it's direction, then when this function is ran changeDirection will change to true
+      changingDirection = true;
 
       const keyPressed = event.keyCode;
       const goingUp = dy === -10;
