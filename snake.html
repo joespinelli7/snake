@@ -62,13 +62,15 @@
     // Calling changeDirection whenever a key is pressed
     document.addEventListener("keydown", changeDirection)
 
-    // Main function of the game, called repeatedly (every step/ movement of the snake) to advance the game
+    // Main function of the game, called repeatedly (every step/movement of the snake) to advance the game
     function main() {
       // If the game ended due to running into snake body or hitting wall, return early to stop game
       if (didGameEnd()) {
         return;
       }
       setTimeout(() => {
+        // changingDirection must be false here to reset changeDirection function and allow user to change
+        // direction again. B/c if you don't reset here, you will only be able to changeDirection once    
         changingDirection = false;
         // Call clearCanvas to remove previous positions of snake that would leave a trail behind
         clearCanvas();
