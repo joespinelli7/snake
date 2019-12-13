@@ -10,7 +10,7 @@
 
       <canvas id="gameCanvas" width="400" height="400"></canvas>
 
-      <div class="btnDiv"><button id="startGameBtn">Start Game</button></div>
+      <div class="btnDiv"><button id="gameBtn">Start Game</button></div>
     </div>
 
       <style>
@@ -36,6 +36,14 @@
   </body>
 
   <script>
+    // Used to prevent page from moving up and down or side to side when keys are pressed
+    window.addEventListener("keydown", (e) => {
+      // Arrow keys
+      if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+      }
+    }, false);
+
     // Each object represents a segment of the snake
     let snake = [
       {x: 200, y: 200},
@@ -65,10 +73,19 @@
     const ctx = gameCanvas.getContext("2d");
 
     // Start the game
+    clearCanvas();
+    const gameBtn = document.getElementById("gameBtn");
+    gameBtn.addEventListener("click", startGame)
+    // Remove start game btn and start game calling main() function
     function startGame() {
-      const gameBtn = document.getElementById('startGameBtn');
+      removeGameBtn();
+      main();
     }
-    main();
+
+    function restartGame() {
+      console.log("here");
+    }
+
     // Create the first food location
     createFood();
     // Calling changeDirection whenever a key is pressed
@@ -78,15 +95,15 @@
     function main() {
       // If the game ended due to running into snake body or hitting wall, return early to stop game
       if (didGameEnd()) {
-        const startGameBtn = document.getElementById('startGameBtn');
-        startGameBtn.parentNode.removeChild(startGameBtn);
-        const btnDiv = document.querySelector('.btnDiv')
-        const gameEndBtn = document.createElement("button");
-        gameEndBtn.innerText = "Restart Game";
-        btnDiv.appendChild(gameEndBtn);
-
+        const btnDiv = document.querySelector(".btnDiv")
+        const restartGameBtn = document.createElement("button");
+        restartGameBtn.innerText = "Restart Game";
+        restartGameBtn.id = "gameBtn";
+        restartGameBtn.addEventListener("click", restartGame);
+        btnDiv.appendChild(restartGameBtn);
         return;
       }
+
       setTimeout(() => {
         // changingDirection must be false here to reset changeDirection function and allow user to change
         // direction again. B/c if you don't reset here, you will only be able to changeDirection once
@@ -99,6 +116,11 @@
         drawSnake();
         main();
         }, 100)
+    }
+
+    function removeGameBtn() {
+      const gameBtn = document.getElementById("gameBtn");
+      gameBtn.parentNode.removeChild(gameBtn);
     }
 
     function clearCanvas() {
