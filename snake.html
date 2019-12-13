@@ -5,9 +5,13 @@
   </head>
 
   <body>
-    <div id="score">0</div>
+    <div>
+      <div id="score">0</div>
 
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+      <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+      <div class="btnDiv"><button id="startGameBtn">Start Game</button></div>
+    </div>
 
       <style>
         #gameCanvas {
@@ -22,6 +26,11 @@
           text-align: center;
           font-size: 140px;
           font-family: "Antic Slab", serif;
+        }
+
+        .btnDiv {
+          text-align: center;
+          margin-top: 450px;
         }
       </style>
   </body>
@@ -56,6 +65,9 @@
     const ctx = gameCanvas.getContext("2d");
 
     // Start the game
+    function startGame() {
+      const gameBtn = document.getElementById('startGameBtn');
+    }
     main();
     // Create the first food location
     createFood();
@@ -66,11 +78,18 @@
     function main() {
       // If the game ended due to running into snake body or hitting wall, return early to stop game
       if (didGameEnd()) {
+        const startGameBtn = document.getElementById('startGameBtn');
+        startGameBtn.parentNode.removeChild(startGameBtn);
+        const btnDiv = document.querySelector('.btnDiv')
+        const gameEndBtn = document.createElement("button");
+        gameEndBtn.innerText = "Restart Game";
+        btnDiv.appendChild(gameEndBtn);
+
         return;
       }
       setTimeout(() => {
         // changingDirection must be false here to reset changeDirection function and allow user to change
-        // direction again. B/c if you don't reset here, you will only be able to changeDirection once    
+        // direction again. B/c if you don't reset here, you will only be able to changeDirection once
         changingDirection = false;
         // Call clearCanvas to remove previous positions of snake that would leave a trail behind
         clearCanvas();
