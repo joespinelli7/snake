@@ -82,10 +82,6 @@
       main();
     }
 
-    function restartGame() {
-      console.log("here");
-    }
-
     // Create the first food location
     createFood();
     // Calling changeDirection whenever a key is pressed
@@ -96,11 +92,13 @@
       // If the game ended due to running into snake body or hitting wall, return early to stop game
       if (didGameEnd()) {
         const btnDiv = document.querySelector(".btnDiv")
-        const restartGameBtn = document.createElement("button");
-        restartGameBtn.innerText = "Restart Game";
-        restartGameBtn.id = "gameBtn";
-        restartGameBtn.addEventListener("click", restartGame);
-        btnDiv.appendChild(restartGameBtn);
+        const clearGameBtn = document.createElement("button");
+        clearGameBtn.innerText = "Clear Game";
+        clearGameBtn.id = "gameBtn";
+        btnDiv.appendChild(clearGameBtn);
+        // Reloads page to allow user to start a new game
+        clearGameBtn.addEventListener("click", () => location.reload());
+
         return;
       }
 
